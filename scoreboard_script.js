@@ -1,13 +1,22 @@
 function onLoad() {
 
-    for(let i = 1; i < 10; i++) {
+    let scoreboard = localStorage.getItem("scoreboard");
+    if(scoreboard !== null) {
+        scoreboard = JSON.parse(scoreboard);
+    }
+
+    for(let i = 0; i < 10; i++) {
         let ul = document.getElementById("list");
         let li = document.createElement("li");
 
         let elements_count = ul.children.length+1;
 
-        let nick = `Element ${elements_count}`;
-        let score = `000${elements_count}`;
+        let nick = `..........`;
+        let score = '0';
+        if(scoreboard !== null) {
+            nick = scoreboard[i].nick;
+            score = scoreboard[i].score;
+        }
 
         let nick_field = document.createElement("span");
         nick_field.setAttribute("class", "nick text-field line-part");

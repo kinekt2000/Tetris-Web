@@ -1,21 +1,55 @@
+
+@font-face {
+    font-family: TetrisFont;
+    src: url("fonts/tetris.ttf");
+}
+
 body {
     background: #ffd480;
 }
 
+.wrapper {
+    position: relative;
+    margin-top: 13%;
+}
+
+
+.label-name {
+    position: absolute;
+    left: 50%;
+    top: -140%;
+
+    /* text */
+    font-family: TetrisFont, sans-serif;
+    font-size: 150px;
+    font-weight: 400;
+
+    /* style */
+    text-align: center;
+}
+
+.label-name span {
+    position: relative;
+    left: -50%;
+    padding: -10px;
+}
+
 .auth{
+    position: relative;
     width: 340px;
     height: 105px;
 
-    margin: 100px auto 30px;
-    padding: 10px;
-    position: relative;
+    margin: 30px auto;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
 
     background: #fffaf6;
     border-radius: 16px;
     box-shadow:
-        0 2px 2px rgba(0, 0, 0, 0.2),
-        0 1px 2px rgba(0, 0, 0, 0.2),
-        0 0 0 12px rgba(255, 255, 255, 0.4);
+            0 2px 2px rgba(0, 0, 0, 0.2),
+            0 1px 2px rgba(0, 0, 0, 0.2),
+            0 0 0 12px rgba(255, 255, 255, 0.4);
 }
 
 .auth .field {
@@ -63,8 +97,8 @@ body {
     /* position */
     position: absolute;
     margin: 0;
-    left: 245px;
-    top: 80px;
+    right: 10%;
+    bottom: 10%;
 
     height: 30px;
     width: 80px;
@@ -73,8 +107,8 @@ body {
 .auth .score-board {
     position: absolute;
     margin: 0;
-    left: 35px;
-    top: 80px;
+    left: 10%;
+    bottom: 10%;
 
     height: 30px;
     width: 125px;

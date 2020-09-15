@@ -1,10 +1,11 @@
 /* drawing place aka context */
 let context;
 let canvas_width = 332;
-let canvas_height = 657;
-let stats_width = 240;
+let canvas_height = 651;
+let stats_width = 241;
 
 /* initialize page with canvas and run game*/
+let scoreboard;
 function onLoad() {
     /* initialize */
     let canvas = document.createElement("canvas");
@@ -12,13 +13,22 @@ function onLoad() {
     canvas.width = canvas_width + stats_width;
     canvas.height = canvas_height;
 
-    document.body.appendChild(canvas);
+    document.getElementById("canvas-wrapper").appendChild(canvas);
     document.addEventListener("keydown", handleKeyboardEvent);
 
+    let nickname = localStorage.getItem("nick");
+    if(nickname === null || nickname.length === 0) {
+        nickname = "undefined";
+    }
+    document.getElementById("nickname").textContent = nickname;
+
+    scoreboard = localStorage.getItem("scoreboard");
+    if(scoreboard !== null) {
+        scoreboard = JSON.parse(scoreboard);
+    }
+
     /* run */
-
     run();
-
 }
 
 const cell_size = 30;
@@ -487,7 +497,8 @@ let stop = false;
 function run() {
 
     if(stop === true) {
-        drawGameOverScreen();
+        context.fillStyle = "#000000C0";
+        context.fillRect(0, 0, canvas_width, canvas_height);
         return;
     }
 
@@ -530,25 +541,24 @@ function update(msTime) {
     if(update.fullLinesTimer > 100) {
         update.fullLinesTimer = 0;
         let disappeared_lines = pit.checkLines();
-        console.log(disappeared_lines);
         for(let i = 0; i < disappeared_lines; i++){
             score += (i + 1) * 5;
         }
     }
 
     if(currBlock.checkCollision(pit) === -1 || currBlock.checkCollision(pit) === Direction.DOWN) {
+        stats.scoreBlock(currBlock.type);
+        score += 5;
+
         currBlock.move(Direction.UP);
         pit.addBlock(currBlock);
         currBlock = nextBlock;
         nextBlock = new Block(3, -4, "random", "random");
         dropBlock = 0;
-
-        stats.scoreBlock(currBlock.type);
-        score += 5;
     }
 
     if(pit.gameOver === true) {
-        stop = true;
+        gameOver();
     }
 }
 
@@ -610,6 +620,10 @@ function handleKeyboardEvent(event) {
             dropBlock = 1;
             break;
 
+        case "Escape":
+            pauseGame();
+            break;
+
         default:
             console.log(event.code);
     }
@@ -625,14 +639,48 @@ function render() {
     context.strokeStyle = "#000000"
     context.lineWidth = 6;
     context.strokeRect(1, 1, canvas_width-1, canvas_height-1);
+
+    context.strokeRect(canvas_width+1, 1, stats_width-1, canvas_height-1);
 }
 
 
-function drawGameOverScreen() {
-    context.fillStyle = "#000000C0";
-    context.fillRect(0, 0, canvas_width, canvas_height);
-    context.font = "60px Arial";
-    context.fillStyle = "#e60000";
-    context.fillText("Game Over", 10, 250);
+function pauseGame() {
+    stop = true;
+    document.getElementById("pause").checked = true;
+}
+
+function gameOver() {
+    stop = true;
+
+    scoreboard.push({nick: localStorage.getItem("nick"), score: score});
+    scoreboard.sort((a, b) => {
+        return b.score - a.score;
+    })
+    scoreboard.pop();
+
+    let scoreboardToStore = JSON.stringify(scoreboard);
+    localStorage.setItem("scoreboard", scoreboardToStore);
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("game-over").checked = true;
+}
+
+function exitGame() {
+    let nickname = localStorage.getItem("nick");
+    if(nickname === "undefined") {
+        localStorage.removeItem("nick");
+    }
+
+    document.location.href = "login.html";
+}
+
+function continueGame() {
+    document.getElementById("pause").checked = false;
+    stop = false;
+    run();
+}
+
+function goToScoreboard() {
+    document.location.href = "scoreboard.html";
 }
 
