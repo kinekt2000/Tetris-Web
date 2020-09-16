@@ -8,6 +8,8 @@ let stats_width = 241;
 let scoreboard;
 function onLoad() {
     /* initialize */
+    audioMaster.play("game-music");
+
     let canvas = document.createElement("canvas");
     context = canvas.getContext("2d");
     canvas.width = canvas_width + stats_width;
@@ -71,6 +73,39 @@ class ColorTable {
 }
 
 colorTable = new ColorTable;
+
+class AudioMaster {
+    constructor() {
+        this.audioLib = new Map;
+        this.audioLib.set("fall", new Audio("sounds/fall.wav"));
+        this.audioLib.set("gameover", new Audio("sounds/gameover.wav"));
+        this.audioLib.set("line", new Audio("sounds/line.wav"));
+        this.audioLib.set("game-music", new Audio("sounds/game.ogg"));
+
+        this.sounds = new Array(0);
+        this.sounds.push(this.audioLib.get("fall"));
+        this.sounds.push(this.audioLib.get("line"));
+
+        this.music = new Array(0);
+        this.music.push(this.audioLib.get("gameover"));
+        this.music.push(this.audioLib.get("game-music"));
+
+        // loop game-music
+        this.audioLib.get("game-music").addEventListener("ended", function () {
+            this.audioLib.get("game-music").play();
+        });
+
+    }
+
+    play(name){
+        let audio = this.audioLib.get(name);
+        if(audio !== null) {
+            audio.play();
+        }
+    }
+}
+
+audioMaster = new AudioMaster();
 
 class Block {
     constructor(pos_x, pos_y, type, rotation = "random") {
@@ -356,6 +391,9 @@ class Pit {
             }
         }
 
+        if(first_frame) {
+            audioMaster.play("line");
+        }
         return count;
     }
 
@@ -527,13 +565,19 @@ let stats = new Statistics();
 
 
 let dropBlock = 0;
+let difficulty = 0;
 update.autoMoveTimer = 0;
 update.fullLinesTimer = 0;
 function update(msTime) {
     update.autoMoveTimer += msTime;
     update.fullLinesTimer += msTime;
 
-    if(update.autoMoveTimer > 500 -  dropBlock * 450) {
+    if(difficulty > 90) difficulty = 90;
+    console.log(difficulty);
+
+    let timeDecrease = (dropBlock > 0) ? (dropBlock * 499) : (5 * difficulty);
+
+    if(update.autoMoveTimer > 500 - timeDecrease) {
         currBlock.move(Direction.DOWN);
         update.autoMoveTimer = 0;
     }
@@ -541,14 +585,20 @@ function update(msTime) {
     if(update.fullLinesTimer > 100) {
         update.fullLinesTimer = 0;
         let disappeared_lines = pit.checkLines();
+        if(disappeared_lines > 0) {
+            difficulty += 2;
+        }
         for(let i = 0; i < disappeared_lines; i++){
             score += (i + 1) * 5;
         }
     }
 
     if(currBlock.checkCollision(pit) === -1 || currBlock.checkCollision(pit) === Direction.DOWN) {
+        audioMaster.play("fall");
+
         stats.scoreBlock(currBlock.type);
         score += 5;
+        difficulty += 0.5;
 
         currBlock.move(Direction.UP);
         pit.addBlock(currBlock);
@@ -558,6 +608,7 @@ function update(msTime) {
     }
 
     if(pit.gameOver === true) {
+        audioMaster.play("gameover");
         gameOver();
     }
 }
