@@ -1,14 +1,13 @@
 /* drawing place aka context */
 let context;
 let canvas_width = 332;
-let canvas_height = 651;
+let canvas_height = 655;
 let stats_width = 241;
 
 /* initialize page with canvas and run game*/
 let scoreboard;
 function onLoad() {
     /* initialize */
-    audioMaster.play("game-music");
 
     let canvas = document.createElement("canvas");
     context = canvas.getContext("2d");
@@ -29,8 +28,27 @@ function onLoad() {
         scoreboard = JSON.parse(scoreboard);
     }
 
+    audioMaster.setSoundsVolume(0);
+    audioMaster.setMusicVolume(0);
+    audioMaster.play("game-music");
+
     /* run */
     run();
+}
+
+function changeSounds(){
+    let slider = document.getElementById("sounds");
+    let value = slider.value;
+
+    audioMaster.setSoundsVolume(value);
+
+}
+
+function changeMusic(){
+    let slider = document.getElementById("music");
+    let value = slider.value;
+
+    audioMaster.setMusicVolume(value);
 }
 
 const cell_size = 30;
@@ -95,10 +113,34 @@ class AudioMaster {
             this.audioLib.get("game-music").play();
         });
 
+        for(let audio of this.audioLib) {
+            audio.muted = true;
+        }
+    }
+
+    setMusicVolume(value){
+        if(value < 0) value = 0;
+        if(value > 1) value = 1;
+
+        for(let music of this.music) {
+            music.volume = value;
+            music.muted = value === 0;
+        }
+    }
+
+    setSoundsVolume(value) {
+        if(value < 0) value = 0;
+        if(value > 1) value = 1;
+
+        for(let sound of this.sounds) {
+            sound.volume = value;
+            sound.muted = value === 0;
+        }
     }
 
     play(name){
         let audio = this.audioLib.get(name);
+        console.log(audio);
         if(audio !== null) {
             audio.play();
         }
@@ -573,7 +615,6 @@ function update(msTime) {
     update.fullLinesTimer += msTime;
 
     if(difficulty > 90) difficulty = 90;
-    console.log(difficulty);
 
     let timeDecrease = (dropBlock > 0) ? (dropBlock * 499) : (5 * difficulty);
 

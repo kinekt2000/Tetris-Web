@@ -16,6 +16,11 @@
                 Press ESC to pause
             </span>
         </div>
+        <div class="label">
+            <span>
+                Or change sounds and music volume
+            </span>
+        </div>
 
     </div>
 
@@ -28,23 +33,47 @@
                 </span>
             </div>
 
-            <p class="exit-wrapper">
-                <button type="button" class="exit-button" onclick="exitGame()">
-                    <span>
-                        Exit
-                    </span>
-                </button>
-                <i class="icon icon-exit"></i>
-            </p>
+            <div class="settings">
+                <p class="float">
+                    <label for="sounds">
+                        <i class="icon icon-sounds"></i>
+                        Sounds volume
+                    </label>
+                    <input type="range" id="sounds" min="0" max="1" step="0.05" value="0" onchange="changeSounds()">
+                </p>
 
-            <p class="continue-wrapper">
-                <button type="button" class="continue-button" onclick="continueGame()">
-                    <span>
-                        Continue
-                    </span>
-                </button>
-                <i class="icon icon-continue"></i>
-            </p>
+                <p class="float">
+                    <label for="music">
+                        <i class="icon icon-music"></i>
+                        Music volume
+                    </label>
+                    <input type="range" id="music" min="0" max="1" step="0.05" value="0" onchange="changeMusic()">
+                </p>
+            </div>
+
+            <div class="buttons">
+
+                <p class="exit-wrapper">
+                    <button type="button" class="exit-button" onclick="exitGame()">
+                        <span>
+                            Exit
+                        </span>
+                    </button>
+                    <i class="icon icon-exit"></i>
+                </p>
+
+
+
+                <p class="continue-wrapper">
+                    <button type="button" class="continue-button" onclick="continueGame()">
+                        <span>
+                            Continue
+                        </span>
+                    </button>
+                    <i class="icon icon-continue"></i>
+                </p>
+
+            </div>
         </div>
     </div>
 

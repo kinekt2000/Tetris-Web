@@ -44,7 +44,7 @@ body {
     position: absolute;
 }
 
-.pop input{
+.pop > input{
     display: none;
 }
 
@@ -66,7 +66,7 @@ body {
     left: 50%;
     top: 50%;
     width: 30%;
-    height: 20%;
+    height: fit-content;
 
     /* style */
     background: #fffaf6;
@@ -78,7 +78,7 @@ body {
 }
 
 .pause-wrapper {
-    margin: 2% auto;
+    margin: 1% auto;
     text-align: center;
 }
 
@@ -87,6 +87,70 @@ body {
     font-size: 100px;
     font-weight: 400;
     text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.pause-popup .settings{
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+}
+
+.pause-popup .settings .float {
+    width: 50%;
+}
+
+.pause-popup .settings .float:first-of-type {
+    padding-right: 2%;
+    padding-left: 5%;
+}
+
+.pause-popup .settings .float:last-of-type {
+    padding-left: 2%;
+    padding-right: 5%;
+}
+
+.settings input {
+    width: 100%;
+}
+
+.settings label {
+    display: block;
+    padding: 0 0 5px 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+    font-size: 11px;
+}
+
+.settings label{
+    text-align: center;
+}
+
+.settings label i {
+    margin-right: 1%;
+    display: inline-block;
+    width: 10px;
+}
+
+
+.buttons {
+    position: relative;
+
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-bottom: 2%;
+}
+
+.buttons p {
+    position: relative;
+}
+
+.buttons p:first-of-type {
+    float: left;
+}
+
+.buttons p:last-of-type{
+    float: right;
 }
 
 button {
@@ -135,13 +199,9 @@ button:active {
 }
 
 .pause-popup .exit-wrapper {
-    position: absolute;
-    left: 5%;
-    bottom: 3%;
-
+    margin-left: 5%;
     height: 30px;
     width: 70px;
-    padding: 0;
 }
 
 .pause-popup .icon-exit {
@@ -149,10 +209,7 @@ button:active {
 }
 
 .pause-popup .continue-wrapper{
-    position: absolute;
-    right: 5%;
-    bottom: 3%;
-
+    margin-right: 5%;
     height: 30px;
     width: 105px;
 }
